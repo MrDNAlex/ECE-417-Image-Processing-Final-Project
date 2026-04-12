@@ -1,3 +1,5 @@
+import time
+
 import cv2
 from BackgroundSubtractor import BackgroundSubtractor
 from VideoProcessorSettings import VideoProcessorSettings
@@ -35,11 +37,16 @@ class VideoProcessor:
                 print("Video finished.")
                 break
             
+            startTime = time.time()
+            
             resizedFrame = cv2.resize(frame, (self.width, self.height))
             
             mask = self.subtractor.apply(resizedFrame)
             
-            print("Finished Frame!")
+            fps = 1.0 / (time.time() - startTime)
+            
+            # Print FPS to terminal to see the difference
+            print(f"Finished Frame! FPS: {fps:.2f}")
             
             cv2.imshow("Video", resizedFrame)
             cv2.imshow("Foreground Mask", mask)
