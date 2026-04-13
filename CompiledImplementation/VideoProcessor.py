@@ -154,9 +154,7 @@ class VideoProcessor:
         # Release the content
         self.capture.release()
         
-        print(self.timingData)
-        
-        if self.showComparisonWindow:
+        if self.settings.showComparisonWindow:
             cv2.destroyAllWindows()
             
     def saveData(self):
