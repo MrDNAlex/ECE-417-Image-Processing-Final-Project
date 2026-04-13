@@ -1,1 +1,7 @@
 /venv
+*.pyc
+/Resources
+/build
+*.pyd
+*.c
+/Videos
