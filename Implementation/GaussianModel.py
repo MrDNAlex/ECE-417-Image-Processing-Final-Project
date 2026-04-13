@@ -20,7 +20,7 @@ class GaussianModel:
         
         for i in range(len(self.mean)):
             self.mean[i] = (1 - rho) * self.mean[i] + rho * pixelVals[i]
-            distanceSquared += (pixelVals[i] - self.mean[0])**2
+            distanceSquared += (pixelVals[i] - self.mean[i])**2
         
         self.variance = (1 - rho) * self.variance + rho*distanceSquared
     
