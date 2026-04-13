@@ -1,3 +1,4 @@
+import pandas as pd
 
 class VideoProcessorSettings:
     
@@ -39,4 +40,19 @@ class VideoProcessorSettings:
         self.morphologySize = morphologySize
         self.showComparisonWindow = showComparison
         
-    
+    def getCSV(self) -> pd.DataFrame:
+        
+        dataFrame = pd.DataFrame(columns=["Setting Name", "Setting Value"], dtype=str)
+        
+        dataFrame.loc[len(dataFrame)] = ["Kernels (K)", self.K]
+        dataFrame.loc[len(dataFrame)] = ["Alpha", self.alpha]
+        dataFrame.loc[len(dataFrame)] = ["Threshold ", self.threshold]
+        dataFrame.loc[len(dataFrame)] = ["Resize Video", self.resizeVideo]
+        dataFrame.loc[len(dataFrame)] = ["Width", self.width]
+        dataFrame.loc[len(dataFrame)] = ["Height", self.height]
+        dataFrame.loc[len(dataFrame)] = ["Use Morphology", self.useMorphology]
+        dataFrame.loc[len(dataFrame)] = ["Morphology Size", self.morphologySize]
+        dataFrame.loc[len(dataFrame)] = ["Show Comparison", self.showComparisonWindow]
+        
+        return dataFrame
+        
