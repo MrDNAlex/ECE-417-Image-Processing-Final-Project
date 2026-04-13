@@ -6,6 +6,7 @@ from libc.math cimport sqrt
 cdef class BackgroundSubtractor:
 
     cdef bint useMorphology
+    cdef int morphologySize
     cdef int width, height, K
     cdef float alpha, threshold, STDDEVSQR
     
@@ -13,14 +14,15 @@ cdef class BackgroundSubtractor:
     cdef float[:, :, :, :] means
     cdef float[:, :, :] variances
 
-    def __init__(self, int width, int height, int K, float alpha, float threshold, bint useMorphology):
+    def __init__(self, int width, int height, int K, float alpha, float threshold, bint useMorphology, int morphologySize):
         self.width = width
         self.height = height
         self.K = K
         self.alpha = alpha
         self.threshold = threshold
         self.STDDEVSQR = 2.5**2
-        self.useMorphology
+        self.useMorphology = useMorphology
+        self.morphologySize = morphologySize
         
         # Initialize the state for every pixel at once
         self.weights = np.zeros((self.height, self.width, self.K), dtype=np.float32)
@@ -39,13 +41,13 @@ cdef class BackgroundSubtractor:
                 maskView[y, x] = self._processPixel(y, x, frame[y, x, :])
 
         if self.useMorphology:
-            maskView = self.morph(maskView, 1) # Erode
-            maskView = self.morph(maskView, 0) # Dilate
+            maskNP = self.morph(maskNP, 1)  # Erode
+            maskNP = self.morph(maskNP, 0)  # Dilate
 
-            maskView = self.morph(maskView, 0) # Dilate
-            maskView = self.morph(maskView, 1) # Erode
+            maskNP = self.morph(maskNP, 0)  # Dilate
+            maskNP = self.morph(maskNP, 1)  # Erode
 
-        return maskNP
+        return np.asarray(maskNP)
 
     @cython.boundscheck(False)
     @cython.wraparound(False)
@@ -151,32 +153,37 @@ cdef class BackgroundSubtractor:
         cdef int w = mask.shape[1]
         cdef int y, x, ky, kx
         cdef bint hit
+        cdef int halfSize = self.morphologySize // 2
         
         # Create a Pointer to properly modify
         outNP = np.zeros((h, w), dtype=np.uint8)
         cdef unsigned char[:, :] out = outNP
 
-        for y in range(2, h - 2):
-            for x in range(2, w - 2):
+        for y in range(halfSize, h - halfSize):
+            for x in range(halfSize, w - halfSize):
                 
                 # OPERATION 0: Dilation (OR logic)
                 if operation == 0:
                     hit = False
-                    for ky in range(-2, 3):
-                        for kx in range(-2, 3):
+                    for ky in range(-halfSize, halfSize + 1):
+                        for kx in range(-halfSize, halfSize + 1):
                             if mask[y + ky, x + kx] == 255:
                                 hit = True
                                 break
+                        if hit:
+                            break
                     out[y, x] = 255 if hit else 0
 
                 # OPERATION 1: Erosion (AND logic)
                 elif operation == 1:
                     hit = True
-                    for ky in range(-2, 3):
-                        for kx in range(-2, 3):
+                    for ky in range(-halfSize, halfSize + 1):
+                        for kx in range(-halfSize, halfSize + 1):
                             if mask[y + ky, x + kx] == 0:
                                 hit = False
                                 break
+                        if not hit:
+                            break
                     out[y, x] = 255 if hit else 0
                     
         return out

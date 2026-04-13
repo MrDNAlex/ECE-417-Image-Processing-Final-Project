@@ -1,6 +1,7 @@
 import time
 
 import cv2
+import numpy as np
 from BackgroundSubtractor import BackgroundSubtractor
 from VideoProcessorSettings import VideoProcessorSettings
 
@@ -23,7 +24,7 @@ class VideoProcessor:
         self.width = settings.width
         self.height = settings.height
         
-        self.subtractor = BackgroundSubtractor(settings.width, settings.height, settings.K, settings.alpha, settings.threshold, settings.useMorphology)
+        self.subtractor = BackgroundSubtractor(settings.width, settings.height, settings.K, settings.alpha, settings.threshold, settings.useMorphology, settings.morphologySize)
         
         self.capture.set(cv2.CAP_PROP_POS_FRAMES, 0)
     
@@ -36,17 +37,19 @@ class VideoProcessor:
             
             startTime = time.time()
             
-            #resizedFrame = cv2.resize(frame, (self.width, self.height))
-            
             mask = self.subtractor.apply(frame)
+            
+            maskBGR = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
+            combinedView = np.hstack((frame, maskBGR))
             
             fps = 1.0 / (time.time() - startTime)
             
             # Print FPS to terminal to see the difference
             print(f"Finished Frame! FPS: {fps:.2f}")
             
-            cv2.imshow("Video", frame)
-            cv2.imshow("Foreground Mask", mask)
+            cv2.putText(combinedView, f"FPS: {fps:.2f}", (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), 2)
+            
+            cv2.imshow("Video", combinedView)
             
             # Press Q to quit
             if cv2.waitKey(1) & 0xFF == ord('q'):
