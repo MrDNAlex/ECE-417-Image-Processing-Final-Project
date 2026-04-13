@@ -22,9 +22,6 @@ class VideoProcessor:
     subtractor : BackgroundSubtractor
     """Compiled Gaussian Video Subtractor"""
     
-    resizeVideo: bool
-    """Boolean toggle for resizing the video on the Fly using OpenCV"""
-    
     width:int
     """Width of the Video to Process"""
     
@@ -62,8 +59,6 @@ class VideoProcessor:
         self.settings = settings
         self.width = int(settings.width)
         self.height = int(settings.height)
-        self.resizeVideo = settings.resizeVideo
-        self.showComparisonWindow = settings.showComparisonWindow
         self.subtractor = BackgroundSubtractor(settings.width, settings.height, settings.K, settings.alpha, settings.threshold, settings.useMorphology, settings.morphologySize)
         
         # Initialize Benchmarking info
@@ -100,7 +95,7 @@ class VideoProcessor:
                 break
             
             # Resize the Video if needed
-            if (self.resizeVideo):
+            if (self.settings.resizeVideo):
                 frame = cv2.resize(frame, (self.width, self.height))
                 
             startTimeProcessing = time.time()
@@ -120,22 +115,21 @@ class VideoProcessor:
             combinedView = np.hstack((frame, maskBGR))
             
             # Print FPS to terminal to see the difference
-            if self.showComparisonWindow:
-                
-                for instance in currentInstances:
-                    
-                    x = int(instance.X)
-                    y = int(instance.Y)
-                    w = int(instance.width)
-                    h = int(instance.height)
-                    
-                    offsetX = x + self.width
-                    
-                    cv2.rectangle(combinedView, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                    cv2.putText(combinedView, f"ID: {instance.uID}", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
-                    
-                    cv2.rectangle(combinedView, (offsetX, y), (offsetX + w, y + h), (0, 255, 0), 2)
-                    cv2.putText(combinedView, f"ID: {instance.uID}", (offsetX, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+            if self.settings.showComparisonWindow:
+                if self.settings.showObjectTracking:
+                    for instance in currentInstances:
+                        x = int(instance.X)
+                        y = int(instance.Y)
+                        w = int(instance.width)
+                        h = int(instance.height)
+                        
+                        offsetX = x + self.width
+                        
+                        cv2.rectangle(combinedView, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                        cv2.putText(combinedView, f"ID: {instance.uID}", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+                        
+                        cv2.rectangle(combinedView, (offsetX, y), (offsetX + w, y + h), (0, 255, 0), 2)
+                        cv2.putText(combinedView, f"ID: {instance.uID}", (offsetX, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
                 
                 cv2.putText(combinedView, f"FPS: {fps:.2f}", (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), 2)
                 cv2.imshow("Video", combinedView)
