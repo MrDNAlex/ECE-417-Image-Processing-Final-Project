@@ -1,6 +1,5 @@
-import time
-
 import cv2
+import time
 import numpy as np
 from BackgroundSubtractor import BackgroundSubtractor
 from VideoProcessorSettings import VideoProcessorSettings

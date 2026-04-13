@@ -2,7 +2,7 @@ from VideoProcessor import VideoProcessor
 from VideoProcessorSettings import VideoProcessorSettings
 
 K = 3
-alpha = 0.1
+alpha = 0.01
 threshold = 0.7
 width = 854
 height = 480
@@ -16,7 +16,7 @@ if horizontalVideo:
 else:
     settings = VideoProcessorSettings(K, alpha, threshold, height, width, useMorphology, morphSize)
 
-processor = VideoProcessor("Implementation/Data/Traffic3.mp4", settings)
+processor = VideoProcessor("Implementation/Data/Universal.mp4", settings)
 
 processor.run()
 
