@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 from BackgroundSubtractor import BackgroundSubtractor
 from VideoProcessorSettings import VideoProcessorSettings
+from Tracking import Tracker
 
 class VideoProcessor:
 
@@ -69,20 +70,23 @@ class VideoProcessor:
         
         # Reset video back to first frame
         self.capture.set(cv2.CAP_PROP_POS_FRAMES, 0)
-    
+        
+        self.tracker = Tracker()
+        
     def run(self):
         """Runs the Background Subtractor on the Video until it is done"""
         
         frameIndex = 0
         totalFrames = int(self.capture.get(cv2.CAP_PROP_FRAME_COUNT))
+        FPS = int(self.capture.get(cv2.CAP_PROP_FPS))
         folderPath: str = f"Cache/{self.folderName}"
         
         if not os.path.exists(folderPath):
             os.makedirs(folderPath)
         
         subtractorVideoSource = cv2.VideoWriter_fourcc(*'mp4v')
-        self.subtractorVideo = cv2.VideoWriter(os.path.join(folderPath, f"{self.fileName}-Mask.mp4"), subtractorVideoSource, int(self.capture.get(cv2.CAP_PROP_FPS)), (self.width, self.height))
-        self.comparisonVideo = cv2.VideoWriter(os.path.join(folderPath, f"{self.fileName}-Comparison.mp4"), subtractorVideoSource, int(self.capture.get(cv2.CAP_PROP_FPS)), (self.width * 2, self.height))
+        self.subtractorVideo = cv2.VideoWriter(os.path.join(folderPath, f"{self.fileName}-Mask.mp4"), subtractorVideoSource, FPS, (self.width, self.height))
+        self.comparisonVideo = cv2.VideoWriter(os.path.join(folderPath, f"{self.fileName}-Comparison.mp4"), subtractorVideoSource, FPS, (self.width * 2, self.height))
         
         while True:
             
@@ -107,6 +111,8 @@ class VideoProcessor:
             fps = 1.0 / (deltaT)
             completion = frameIndex / totalFrames * 100
             print(f"Finished Frame! FPS: {fps:.2f} {completion:.2f}%")
+            
+            self.tracker.processMask(mask, frameIndex, float(frameIndex)/FPS)
             
             # Convert the image to BGR Space so that it can be combined next to raw video
             maskBGR = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
@@ -145,4 +151,5 @@ class VideoProcessor:
         self.settings.getCSV().to_csv(os.path.join(folderPath, "Settings.csv"), index=False)
         self.subtractorVideo.release()
         self.comparisonVideo.release()
+        print(self.tracker.sequences)
         
