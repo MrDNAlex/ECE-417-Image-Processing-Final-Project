@@ -117,7 +117,7 @@ cdef class ObjectTracker:
                 w = maxX[i] - minX[i]
                 h = maxY[i] - minY[i]
 
-                if w * h > 100:
+                if w * h > 350:
                     boundingBoxes.append((minX[i], minY[i], w, h))
 
         return boundingBoxes
