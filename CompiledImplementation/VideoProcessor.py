@@ -62,7 +62,7 @@ class VideoProcessor:
         self.subtractor = BackgroundSubtractor(settings.width, settings.height, settings.K, settings.alpha, settings.threshold, settings.useMorphology, settings.morphologySize)
         
         # Initialize Benchmarking info
-        self.timingData = pd.DataFrame(columns=["Frame Index", "FPS", "Raw Time (s)", "Full Time (s)"])
+        self.timingData = pd.DataFrame(columns=["Frame Index", "FPS", "Gaussian Time (s)", "Tracking Time (s)", "Full Processing Time (s)"])
         
         # Reset video back to first frame
         self.capture.set(cv2.CAP_PROP_POS_FRAMES, 0)
@@ -108,7 +108,12 @@ class VideoProcessor:
             completion = frameIndex / totalFrames * 100
             print(f"Finished Frame! FPS: {fps:.2f} {completion:.2f}%")
             
+            
+            startTimeTracking = time.time()
+            
             _, currentInstances = self.tracker.processMask(mask, frameIndex, float(frameIndex)/FPS)
+            
+            deltaTTracking = time.time() - startTimeTracking
             
             # Convert the image to BGR Space so that it can be combined next to raw video
             maskBGR = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
@@ -140,7 +145,7 @@ class VideoProcessor:
             delatTRaw = time.time() - startTimeRaw
             
             frameIndex += 1
-            self.timingData.loc[len(self.timingData)] = [frameIndex, fps, deltaT, delatTRaw]
+            self.timingData.loc[len(self.timingData)] = [frameIndex, fps, deltaT, deltaTTracking,  delatTRaw]
             
             # Press Q to quit
             if cv2.waitKey(1) & 0xFF == ord('q'):
