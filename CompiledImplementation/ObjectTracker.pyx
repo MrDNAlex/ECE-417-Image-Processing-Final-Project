@@ -37,7 +37,7 @@ cdef class ObjectTracker:
             if rootX < rootY:
                 self.parent[rootY] = rootX
             else:
-                self.parent[rootX] = rootY        
+                self.parent[rootX] = rootY
 
     @cython.boundscheck(False)
     @cython.wraparound(False)

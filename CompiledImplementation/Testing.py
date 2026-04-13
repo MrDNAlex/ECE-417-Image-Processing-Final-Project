@@ -12,7 +12,7 @@ horizontalVideo = True
 useMorphology = True
 morphSize = 3
 showComparison = True
-showTracking = False
+showTracking = True
 
 # Create the Settings Object
 if horizontalVideo:
