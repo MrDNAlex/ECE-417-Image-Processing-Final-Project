@@ -1,4 +1,5 @@
 import math
+import json
 from ObjectTracker import ObjectTracker
 
 #
@@ -28,6 +29,23 @@ class ObjectInstance:
         self.width = width
         self.height = height
         self.size = width * height
+        
+    def getCenter(self):
+        return (self.X + self.width / 2.0, self.Y + self.height / 2.0)
+    
+    def getJSON(self):
+        obj: json = {}
+        
+        obj["uID"] = self.uID
+        obj["FrameNumber"] = self.frameNumber
+        obj["TimeSeconds"] = self.timeSec
+        obj["PosX"] = self.X
+        obj["PosY"] = self.Y
+        obj["Width"] = self.width
+        obj["Height"] = self.height
+        obj["Size"] = self.size
+        
+        return obj
         
 class ObjectSequence:
     
@@ -59,7 +77,25 @@ class ObjectSequence:
         
         self.sumSize += instance.size
         self.instances.insert(i, instance)
-
+        
+    def getJSON(self):
+        
+        obj: json = {}
+        
+        obj["uID"] = self.uID
+        obj["MinX"] = self.minX
+        obj["MinY"] = self.minY
+        obj["MaxX"] = self.maxX
+        obj["MaxY"] = self.maxY
+        
+        instancesJSON = []
+        for instance in self.instances:
+            instancesJSON.append(instance.getJSON())
+        
+        obj["Instances"] = instancesJSON
+        
+        return obj
+        
 class Tracker:
     sequences : list[ObjectSequence]
     nextUID: int
@@ -118,5 +154,5 @@ class Tracker:
                 self.sequences.append(newSequence)
                 self.nextUID += 1
             
-        return self.sequences
+        return (self.sequences, currentInstances) 
     
