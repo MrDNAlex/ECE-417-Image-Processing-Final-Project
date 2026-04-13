@@ -1,3 +1,4 @@
+import json
 import os
 import cv2
 import time
@@ -112,7 +113,7 @@ class VideoProcessor:
             completion = frameIndex / totalFrames * 100
             print(f"Finished Frame! FPS: {fps:.2f} {completion:.2f}%")
             
-            self.tracker.processMask(mask, frameIndex, float(frameIndex)/FPS)
+            _, currentInstances = self.tracker.processMask(mask, frameIndex, float(frameIndex)/FPS)
             
             # Convert the image to BGR Space so that it can be combined next to raw video
             maskBGR = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
@@ -120,6 +121,22 @@ class VideoProcessor:
             
             # Print FPS to terminal to see the difference
             if self.showComparisonWindow:
+                
+                for instance in currentInstances:
+                    
+                    x = int(instance.X)
+                    y = int(instance.Y)
+                    w = int(instance.width)
+                    h = int(instance.height)
+                    
+                    offsetX = x + self.width
+                    
+                    cv2.rectangle(combinedView, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                    cv2.putText(combinedView, f"ID: {instance.uID}", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+                    
+                    cv2.rectangle(combinedView, (offsetX, y), (offsetX + w, y + h), (0, 255, 0), 2)
+                    cv2.putText(combinedView, f"ID: {instance.uID}", (offsetX, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+                
                 cv2.putText(combinedView, f"FPS: {fps:.2f}", (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), 2)
                 cv2.imshow("Video", combinedView)
             
@@ -147,9 +164,16 @@ class VideoProcessor:
         
         folderPath: str = f"Cache/{self.folderName}"
         
-        self.timingData.to_csv(os.path.join(folderPath, "Timing.csv"), index=False)
-        self.settings.getCSV().to_csv(os.path.join(folderPath, "Settings.csv"), index=False)
         self.subtractorVideo.release()
         self.comparisonVideo.release()
-        print(self.tracker.sequences)
         
+        self.timingData.to_csv(os.path.join(folderPath, "Timing.csv"), index=False)
+        self.settings.getCSV().to_csv(os.path.join(folderPath, "Settings.csv"), index=False)
+        
+        data:json = []
+        for seq in self.tracker.sequences:
+            data.append(seq.getJSON())
+            
+        with open(os.path.join(folderPath, "Tracking.json"), 'w') as f:
+            json.dump(data, f, indent=4)
+            
