@@ -5,6 +5,8 @@ import numpy as np
 # Adds the Background Subtractor fike to be compiled
 extensions = [
     Extension("BackgroundSubtractor", ["CompiledImplementation/BackgroundSubtractor.pyx"],
+              include_dirs=[np.get_include()]),
+    Extension("ObjectTracker", ["CompiledImplementation/ObjectTracker.pyx"],
               include_dirs=[np.get_include()])
 ]
 

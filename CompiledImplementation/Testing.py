@@ -11,14 +11,16 @@ resizeVideo = False
 horizontalVideo = True
 useMorphology = True
 morphSize = 3
-showComparison = False
+showComparison = True
+showTracking = True
 
 # Create the Settings Object
 if horizontalVideo:
-    settings = VideoProcessorSettings(K, alpha, threshold, width, height, resizeVideo, useMorphology, morphSize, showComparison)
+    settings = VideoProcessorSettings(K, alpha, threshold, width, height, resizeVideo, useMorphology, morphSize, showComparison, showTracking)
 else:
-    settings = VideoProcessorSettings(K, alpha, threshold, height, width, resizeVideo, useMorphology, morphSize, showComparison)
+    settings = VideoProcessorSettings(K, alpha, threshold, height, width, resizeVideo, useMorphology, morphSize, showComparison, showTracking)
 
 # Create a Video Processor and run it
-processor = VideoProcessor("Videos/Traffic.mp4", settings)
+processor = VideoProcessor("Videos/Traffic.mp4", settings, "TrafficOutput")
 processor.run()
+processor.saveData()
