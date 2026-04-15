@@ -4,6 +4,9 @@ The Final Project for ECE 417 - Image Processing. Will cover Scene detection wit
 # Setup Development Environment
 To setup your environment run the following commands in your terminal :
 
+> Note : it is best to use Bash or CMD to execute these commands
+
+
 Create a new Virtual Environment :
 ```bash
 python -m venv venv
@@ -24,6 +27,11 @@ One step Setup
 python -m venv venv
 source venv/Scripts/Activate
 pip install -r requirements.txt
+```
+
+Compile the code for fast version :
+```bash
+python CompiledImplementation/setup.py build_ext --build-lib CompiledImplementation/
 ```
 
 # Authors 
