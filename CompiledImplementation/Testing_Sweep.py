@@ -34,5 +34,6 @@ for res in ResFolder:
                         processor = VideoProcessor(os.path.join(VideoFolder, res, video), settings, os.path.join(res, video[:-4], f"K{k}/A{a}_/T{t}/M{m}"))
                         processor.run()
                         processor.saveData()
+                        print("Finished Video")
 
 
