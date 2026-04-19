@@ -25,13 +25,14 @@ for res in ResFolder:
         for k in K:
             for a in alpha:
                 for t in threshold:
-                    if horizontalVideo:
-                        settings = VideoProcessorSettings(k, a, t, width, height, resizeVideo, useMorphology, morphSize, showComparison, showTracking)
-                    else:
-                        settings = VideoProcessorSettings(k, a, t, height, width, resizeVideo, useMorphology, morphSize, showComparison, showTracking)
-                        
-                    processor = VideoProcessor(os.path.join(VideoFolder, res, video), settings, os.path.join(res, video[:-4], f"K{k}/A{a}_/T{t}"))
-                    processor.run()
-                    processor.saveData()
+                    for m in morphSize:
+                        if horizontalVideo:
+                            settings = VideoProcessorSettings(k, a, t, width, height, resizeVideo, useMorphology, m, showComparison, showTracking)
+                        else:
+                            settings = VideoProcessorSettings(k, a, t, height, width, resizeVideo, useMorphology, m, showComparison, showTracking)
+                            
+                        processor = VideoProcessor(os.path.join(VideoFolder, res, video), settings, os.path.join(res, video[:-4], f"K{k}/A{a}_/T{t}/M{m}"))
+                        processor.run()
+                        processor.saveData()
 
 
