@@ -19,20 +19,17 @@ VideoFolder = "Videos"
 ResFolder = ["120p", "240p", "360p", "480p"]
 VideosNames = ["Traffic1.mp4", "Traffic2.mp4", "Traffic3.mp4", "Traffic4.mp4", "Traffic5.mp4"]
 
-# Create the Settings Object
-if horizontalVideo:
-    settings = VideoProcessorSettings(K, alpha, threshold, width, height, resizeVideo, useMorphology, morphSize, showComparison, showTracking)
-else:
-    settings = VideoProcessorSettings(K, alpha, threshold, height, width, resizeVideo, useMorphology, morphSize, showComparison, showTracking)
 
 for res in ResFolder:
     for video in VideosNames:
         for k in K:
             for a in alpha:
                 for t in threshold:
-                    settings.K = k
-                    settings.alpha = a
-                    settings.threshold = t
+                    if horizontalVideo:
+                        settings = VideoProcessorSettings(k, a, t, width, height, resizeVideo, useMorphology, morphSize, showComparison, showTracking)
+                    else:
+                        settings = VideoProcessorSettings(k, a, t, height, width, resizeVideo, useMorphology, morphSize, showComparison, showTracking)
+                        
                     processor = VideoProcessor(os.path.join(VideoFolder, res, video), settings, os.path.join(res, video[:-4], f"K{k}/A{a}_/T{t}"))
                     processor.run()
                     processor.saveData()
