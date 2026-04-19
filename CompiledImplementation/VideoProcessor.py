@@ -4,9 +4,9 @@ import cv2
 import time
 import numpy as np
 import pandas as pd
-from BackgroundSubtractor import BackgroundSubtractor
-from VideoProcessorSettings import VideoProcessorSettings
-from Tracking import Tracker
+from .BackgroundSubtractor import BackgroundSubtractor
+from .VideoProcessorSettings import VideoProcessorSettings
+from .Tracking import Tracker
 
 class VideoProcessor:
 
@@ -86,7 +86,7 @@ class VideoProcessor:
         
         while True:
             
-            startTimeRaw = time.time()
+            startTimeRaw = time.perf_counter()
             
             # Extract a single frame
             returned, frame = self.capture.read()
@@ -98,22 +98,22 @@ class VideoProcessor:
             if (self.settings.resizeVideo):
                 frame = cv2.resize(frame, (self.width, self.height))
                 
-            startTimeProcessing = time.time()
+            startTimeProcessing = time.perf_counter()
             
             # Apply the Background Gaussian Subtractor 
             mask = self.subtractor.apply(frame)
             
-            deltaT = time.time() - startTimeProcessing
-            fps = 1.0 / (deltaT)
+            deltaT = time.perf_counter() - startTimeProcessing
+            fps = 1.0 / deltaT
             completion = frameIndex / totalFrames * 100
             print(f"Finished Frame! FPS: {fps:.2f} {completion:.2f}%")
             
             
-            startTimeTracking = time.time()
+            startTimeTracking = time.perf_counter()
             
             _, currentInstances = self.tracker.processMask(mask, frameIndex, float(frameIndex)/FPS)
             
-            deltaTTracking = time.time() - startTimeTracking
+            deltaTTracking = time.perf_counter() - startTimeTracking
             
             # Convert the image to BGR Space so that it can be combined next to raw video
             maskBGR = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
@@ -142,7 +142,7 @@ class VideoProcessor:
             self.subtractorVideo.write(maskBGR)
             self.comparisonVideo.write(combinedView)
             
-            delatTRaw = time.time() - startTimeRaw
+            delatTRaw = time.perf_counter() - startTimeRaw
             
             frameIndex += 1
             self.timingData.loc[len(self.timingData)] = [frameIndex, fps, deltaT, deltaTTracking,  delatTRaw]
