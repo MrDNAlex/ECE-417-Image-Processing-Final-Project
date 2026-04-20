@@ -4,9 +4,9 @@ import cv2
 import time
 import numpy as np
 import pandas as pd
-from BackgroundSubtractor import BackgroundSubtractor
-from VideoProcessorSettings import VideoProcessorSettings
-from Tracking import Tracker
+from .BackgroundSubtractor import BackgroundSubtractor
+from .VideoProcessorSettings import VideoProcessorSettings
+from .Tracking import Tracker
 
 class VideoProcessor:
 

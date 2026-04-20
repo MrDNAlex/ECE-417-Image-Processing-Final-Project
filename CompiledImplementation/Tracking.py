@@ -1,6 +1,6 @@
 import math
 import json
-from ObjectTracker import ObjectTracker
+from .ObjectTracker import ObjectTracker
 
 #
 # Direct Translations of what is necessary from TrackInstance and TrackSequence
