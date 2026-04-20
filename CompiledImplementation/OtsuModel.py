@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from VideoProcessorSettings import VideoProcessorSettings
+from .VideoProcessorSettings import VideoProcessorSettings
 
 # filepath: c:\Users\basne\Desktop\school\ECE417\ECE-417-Image-Processing-Final-Project\Implementation\OtsuModel.py
 

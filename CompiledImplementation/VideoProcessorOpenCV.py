@@ -4,9 +4,9 @@ import cv2
 import time
 import numpy as np
 import pandas as pd
-from OpenCVModel import OpenCVModel
-from VideoProcessorSettings import VideoProcessorSettings
-from Tracking import Tracker
+from .OpenCVModel import OpenCVModel
+from .VideoProcessorSettings import VideoProcessorSettings
+from .Tracking import Tracker
 
 class VideoProcessorOpenCV:
 

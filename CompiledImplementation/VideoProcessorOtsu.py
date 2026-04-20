@@ -4,9 +4,9 @@ import cv2
 import time
 import numpy as np
 import pandas as pd
-from OtsuModel import OtsuModel
-from VideoProcessorSettings import VideoProcessorSettings
-from Tracking import Tracker
+from .OtsuModel import OtsuModel
+from .VideoProcessorSettings import VideoProcessorSettings
+from .Tracking import Tracker
 
 class VideoProcessorOtsu:
 
