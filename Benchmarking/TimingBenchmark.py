@@ -43,15 +43,15 @@ def RunHighResSweep(settings: list[VideoProcessorSettings], index):
     resolutionsX = {
         "720p" : 1280,
         "1080p" : 1920,
-        #"1440p" : 2560,
-        #"2160p" : 3840
+        "1440p" : 2560,
+        "2160p" : 3840
     }
     
     resolutionsY = {
         "720p" : 720,
         "1080p" : 1080,
-        #"1440p" : 1440,
-        #"2160p" : 2160
+        "1440p" : 1440,
+        "2160p" : 2160
     }
     
     videos = ["Traffic1.mp4", "Traffic2.mp4", "Traffic3.mp4", "Traffic4.mp4", "Traffic5.mp4"]
