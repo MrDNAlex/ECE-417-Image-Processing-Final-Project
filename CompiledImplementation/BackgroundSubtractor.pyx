@@ -20,7 +20,7 @@ cdef class BackgroundSubtractor:
         self.K = K
         self.alpha = alpha
         self.threshold = threshold
-        self.STDDEVSQR = threshold ** 2
+        self.STDDEVSQR = 2.5 ** 2
         self.useMorphology = useMorphology
         self.morphologySize = morphologySize
         
