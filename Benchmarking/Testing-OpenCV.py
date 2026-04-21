@@ -17,7 +17,7 @@ resizeVideo = False
 horizontalVideo = True
 useMorphology = True
 morphSize = 3
-showComparison = True
+showComparison = False
 showTracking = False
 
 VideoFolder = "Videos"
@@ -29,10 +29,10 @@ resolutionsX = {
     "240p" : 426,
     "360p" : 640,
     "480p" : 852,
-    #"720p" : 1280,
-    #"1080p" : 1920,
-    #"1440p" : 2560,
-    #"2160p" : 3840
+    "720p" : 1280,
+    "1080p" : 1920,
+    "1440p" : 2560,
+    "2160p" : 3840
 }
 
 resolutionsY = {
@@ -40,10 +40,10 @@ resolutionsY = {
     "240p" : 240,
     "360p" : 360,
     "480p" : 480,
-    #"720p" : 720,
-    #"1080p" : 1080,
-    #"1440p" : 1440,
-    #"2160p" : 2160
+    "720p" : 720,
+    "1080p" : 1080,
+    "1440p" : 1440,
+    "2160p" : 2160
 }
 
 for res in ResFolder:
