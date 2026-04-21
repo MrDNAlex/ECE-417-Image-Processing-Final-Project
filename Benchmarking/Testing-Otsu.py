@@ -16,7 +16,7 @@ height = 480
 resizeVideo = False
 horizontalVideo = True
 useMorphology = True
-morphSize = 3
+morphSize = [3, 4, 5]
 showComparison = False
 showTracking = False
 
@@ -48,17 +48,18 @@ resolutionsY = {
 
 for res in ResFolder:
     for video in VideosNames:
+        for m in morphSize:
 
-        # Create the Settings Object
-        if horizontalVideo:
-            settings = VideoProcessorSettings(K, alpha, threshold, width, height, resizeVideo, useMorphology, morphSize, showComparison, showTracking)
-        else:
-            settings = VideoProcessorSettings(K, alpha, threshold, height, width, resizeVideo, useMorphology, morphSize, showComparison, showTracking)
+            # Create the Settings Object
+            if horizontalVideo:
+                settings = VideoProcessorSettings(K, alpha, threshold, width, height, resizeVideo, useMorphology, m, showComparison, showTracking)
+            else:
+                settings = VideoProcessorSettings(K, alpha, threshold, height, width, resizeVideo, useMorphology, m, showComparison, showTracking)
 
-        settings.width = resolutionsX[res]
-        settings.height = resolutionsY[res]
+            settings.width = resolutionsX[res]
+            settings.height = resolutionsY[res]
 
-        # Create a Video Processor and run it
-        processor = VideoProcessorOtsu(os.path.join(VideoFolder, res, video), settings, os.path.join("Otsu", res, video[:-4]))
-        processor.run()
-        processor.saveData()
+            # Create a Video Processor and run it
+            processor = VideoProcessorOtsu(os.path.join(VideoFolder, res, video), settings, os.path.join("Otsu", f"M-{m}", res, video[:-4]))
+            processor.run()
+            processor.saveData()
