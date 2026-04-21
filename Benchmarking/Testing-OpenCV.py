@@ -59,6 +59,6 @@ for res in ResFolder:
         settings.height = resolutionsY[res]
 
         # Create a Video Processor and run it
-        processor = VideoProcessorOpenCV(os.path.join(VideoFolder, res, video), settings, os.path.join(res, video[:-4]))
+        processor = VideoProcessorOpenCV(os.path.join(VideoFolder, res, video), settings, os.path.join("Open-CV", res, video[:-4]))
         processor.run()
         processor.saveData()

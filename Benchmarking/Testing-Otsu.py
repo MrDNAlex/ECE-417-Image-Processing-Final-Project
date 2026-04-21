@@ -59,6 +59,6 @@ for res in ResFolder:
         settings.height = resolutionsY[res]
 
         # Create a Video Processor and run it
-        processor = VideoProcessorOtsu(os.path.join(VideoFolder, res, video), settings, os.path.join(res, video[:-4]))
+        processor = VideoProcessorOtsu(os.path.join(VideoFolder, res, video), settings, os.path.join("Otsu", res, video[:-4]))
         processor.run()
         processor.saveData()
