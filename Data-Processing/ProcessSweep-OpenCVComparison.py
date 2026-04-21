@@ -1,12 +1,10 @@
 import os
 import glob
+import sys
 import pandas as pd
 
-def processVideoComparisonCSV():
+def processVideoComparisonCSV(videoName):
     results = []
-    
-    # Define the resolutions to compare
-    maxResolution = ['120p', '240p', '360p', '480p']
     
     # Create a search pattern to find all Mask videos
     searchPath = os.path.join("Data-Processing", "Raw-Data", "Param-Sweep", "*", "Traffic*", "K*", "A*", "T*", "M*", "*-Mask.mp4")
@@ -27,7 +25,7 @@ def processVideoComparisonCSV():
             resolutionFolder = parts[-7]
             morphNumber = mFolder.replace("M", "")
             
-            if resolutionFolder not in maxResolution:
+            if trafficFolder not in videoName:
                 continue
 
             # Set baseline paths assuming OpenCV and otsu directories live at the root
@@ -55,11 +53,15 @@ def processVideoComparisonCSV():
         resultsDF = pd.DataFrame(results)
         
         # Save to a clean CSV
-        outputName = "Data-Processing\\Processed\\VideoComparison.csv"
+        outputName = f"Data-Processing\\Processed\\VideoComparison-{videoName}.csv"
         resultsDF.to_csv(outputName, index=False)
         print(f"Successfully saved {outputName}")
     else:
         print("No files matched the search path.")
 
-if __name__ == "__main__":
-    processVideoComparisonCSV()
+if __name__ == "__main__":    
+    processVideoComparisonCSV("Traffic1")
+    processVideoComparisonCSV("Traffic2")
+    processVideoComparisonCSV("Traffic3")
+    processVideoComparisonCSV("Traffic4")
+    processVideoComparisonCSV("Traffic5")
