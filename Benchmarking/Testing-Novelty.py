@@ -41,7 +41,11 @@ def ExtractSettings(df: pd.DataFrame) -> list[tuple]:
     for index, row in df.iterrows():
         
         # Clean and convert the string variables to numbers
-        category = int(str(row['Category']).split("-")[0].strip())
+        try:
+            category = int(str(row['Category']).split("-")[0].strip())
+        except:
+            category = "NA"
+            
         KVal = int(str(row['K']).replace('K', ''))
         alphaVal = float(str(row['A']).replace('A', '').replace('_', ''))
         thresholdVal = float(str(row['T']).replace('T', ''))
