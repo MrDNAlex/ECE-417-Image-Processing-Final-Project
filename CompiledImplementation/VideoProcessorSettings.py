@@ -32,8 +32,10 @@ class VideoProcessorSettings:
     showObjectTracking: bool
     """Boolean Toggle for showing the Object Tracking within the scene"""
     
+    name: str 
+    """Name of the Settings"""
     
-    def __init__(self, K, alpha, threshold, width, height, resizeVideo, useMorphology, morphologySize, showComparison, showTracking):
+    def __init__(self, K, alpha, threshold, width, height, resizeVideo, useMorphology, morphologySize, showComparison, showTracking, name = "Settings"):
         self.K = K
         self.alpha = alpha
         self.threshold = threshold
@@ -44,6 +46,7 @@ class VideoProcessorSettings:
         self.morphologySize = morphologySize
         self.showComparisonWindow = showComparison
         self.showObjectTracking = showTracking
+        self.name = name
         
     def getCSV(self) -> pd.DataFrame:
         
@@ -61,4 +64,6 @@ class VideoProcessorSettings:
         dataFrame.loc[len(dataFrame)] = ["Show Tracking", self.showObjectTracking]
         
         return dataFrame
-        
+    
+    def clone(self):
+        return VideoProcessorSettings(self.K, self.alpha, self.threshold, self.width, self.height, self.resizeVideo, self.useMorphology, self.morphologySize, self.showComparisonWindow, self.showObjectTracking, self.name)

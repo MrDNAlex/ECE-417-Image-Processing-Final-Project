@@ -8,9 +8,9 @@ from CompiledImplementation.VideoProcessor import VideoProcessor
 from CompiledImplementation.VideoProcessorSettings import VideoProcessorSettings
 
 # Define all the Settings
-K = [2,3,4,5]
+K = [2,3,4]
 alpha = [0.001, 0.01, 0.1]
-threshold = [0.5, 0.6, 0.7, 0.8]
+threshold = [0.5, 0.7, 0.9]
 width = 854
 height = 480
 resizeVideo = False
@@ -46,8 +46,8 @@ resolutionsY = {
     "2160p" : 2160
 }
 
-for res in ResFolder:
-    for video in VideosNames:
+def RunVideoSweep(video: str):
+    for res in ResFolder:
         for k in K:
             for a in alpha:
                 for t in threshold:
@@ -64,5 +64,15 @@ for res in ResFolder:
                         processor.run()
                         processor.saveData()
                         print("Finished Video")
+
+try:
+    index = int(sys.argv[1])
+except (IndexError, ValueError):
+    print("Error: Please provide a valid integer index.")
+    sys.exit(1)
+    
+print(VideosNames[index])
+
+RunVideoSweep(VideosNames[index])
 
 
