@@ -41,6 +41,7 @@ def ExtractSettings(df: pd.DataFrame) -> list[tuple]:
     for index, row in df.iterrows():
         
         # Clean and convert the string variables to numbers
+        category = int(str(row['Category']).split("-")[0].strip())
         KVal = int(str(row['K']).replace('K', ''))
         alphaVal = float(str(row['A']).replace('A', '').replace('_', ''))
         thresholdVal = float(str(row['T']).replace('T', ''))
@@ -73,7 +74,7 @@ def ExtractSettings(df: pd.DataFrame) -> list[tuple]:
             setting = VideoProcessorSettings(KVal, alphaVal, thresholdVal, heightVal, widthVal, resizeVideo, useMorphology, morphSizeVal, showComparison, showTracking)
             
         # Create the name
-        setting.name = f"{resolutionString}\\K-{KVal}\\A-{alphaVal}\\T-{thresholdVal}\\M-{morphSizeVal}"
+        setting.name = f"Category-{category}\\{resolutionString}\\K-{KVal}\\A-{alphaVal}\\T-{thresholdVal}\\M-{morphSizeVal}"
         
         # Add the tuple to my array
         SettingsAndVideos.append((setting, videoFileName, resolutionString))
