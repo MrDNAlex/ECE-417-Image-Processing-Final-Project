@@ -103,7 +103,7 @@ def evaluateVideoSimilarities(csvPath, numFrames=10):
     df['SSIM Otsu Med'] = otsuScoresMed
     
     # Save the final results to a new CSV
-    outputPath = f"Data-Processing\\Processed\\VideoScores-{os.path.basename(csvPath).split('.')[0].split('-')[1]}-Comp{framesToCompare}.csv"
+    outputPath = f"Data-Processing\\Processed\\Scores\\VideoScores-{os.path.basename(csvPath).split('.')[0].split('-')[1]}-Comp{framesToCompare}.csv"
     df.to_csv(outputPath, index=False)
     print(f"\nSuccessfully saved all scores to {outputPath}")
 
