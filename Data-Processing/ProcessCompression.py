@@ -26,7 +26,9 @@ def ProcessCompressionSizes():
             kFolder = parts[-6]               # e.g., K-3
             resolutionFolder = parts[-7]      # e.g., 480p
             category = parts[-8]
-            bestSettingCategory = parts[-9]        # e.g., TipTop-Summary-OpenCV
+            refreshIndex = parts[-9].removeprefix("Ref")
+            objDetect = parts[-10].removeprefix("ObjDetect")
+            bestSettingCategory = parts[-11]        # e.g., TipTop-Summary-OpenCV
 
             # Create the Raw Video Path
             rawFile = file.replace("-Compressed.mp4", "-Raw.mp4")
@@ -39,6 +41,8 @@ def ProcessCompressionSizes():
             results.append({
                 "Best Settings Category": bestSettingCategory,
                 "Category": category,
+                "Use Object Detection": objDetect,
+                "Refresh Index": refreshIndex,
                 "Resolution": resolutionFolder,
                 "Traffic Video": trafficFolder,
                 "K": kFolder.replace("K-", ""),
