@@ -6,6 +6,7 @@
 *.c
 /Videos
 /Cache
-Implementation/Data/Traffic1.mp4
+/Data-Processing/Timing
 /Data-Processing/Raw-Data
 /Data-Processing/Processed/Plots
+/Data-Processing/Processed/Scores

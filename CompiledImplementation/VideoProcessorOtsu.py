@@ -105,6 +105,15 @@ class VideoProcessorOtsu:
             # Apply the Background Subtractor 
             mask = self.subtractor.apply(frame)
             
+            if self.settings.useMorphology:
+                kernel = np.ones((self.settings.morphologySize, self.settings.morphologySize), np.uint8)
+                
+                # Apply Erode -> Dilate -> Dilate -> Erode
+                mask = cv2.erode(mask, kernel, iterations=1)
+                mask = cv2.dilate(mask, kernel, iterations=1)
+                mask = cv2.dilate(mask, kernel, iterations=1)
+                mask = cv2.erode(mask, kernel, iterations=1)
+            
             deltaT = time.perf_counter() - startTimeProcessing
             fps = 1.0 / (deltaT)
             completion = frameIndex / totalFrames * 100
