@@ -2,7 +2,7 @@ import os
 import pandas as pd
 
 videoNames = ["Traffic1", "Traffic2", "Traffic3", "Traffic4", "Traffic5"]
-framesCompared = [5, 10, 25, 50, 100, 250, 500, 1000]
+framesCompared = [5, 10, 25, 50, 100, 250, 500]
 desiredColumns = ["Resolution", "Traffic", "K", "A", "T", "M", "Frames Compared", "SSIM OpenCV AVG", "SSIM OpenCV Var", "SSIM OpenCV Med", "SSIM Otsu AVG", "SSIM Otsu Var", "SSIM Otsu Med"]
 
 # Loop through all videos and Frames to compare
