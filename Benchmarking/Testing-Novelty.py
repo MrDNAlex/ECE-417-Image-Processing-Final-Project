@@ -6,7 +6,7 @@ import pandas as pd
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from CompiledImplementation.SecurityCameraProcessor import SecurityCameraProcessor
-from CompiledImplementation.VideoProcessorSettings import VideoProcessorSettings
+from CompiledImplementation.SecurityCameraProcessorSettings import SecurityCameraProcessorSettings
 
 def ExtractSettings(df: pd.DataFrame) -> list[tuple]:
     """
@@ -69,9 +69,9 @@ def ExtractSettings(df: pd.DataFrame) -> list[tuple]:
         
         # Create the Settings
         if horizontalVideo:
-            setting = VideoProcessorSettings(KVal, alphaVal, thresholdVal, widthVal, heightVal, resizeVideo, useMorphology, morphSizeVal, showComparison, showTracking)
+            setting = SecurityCameraProcessorSettings(KVal, alphaVal, thresholdVal, widthVal, heightVal, resizeVideo, useMorphology, morphSizeVal, showComparison, showTracking, False, 0)
         else:
-            setting = VideoProcessorSettings(KVal, alphaVal, thresholdVal, heightVal, widthVal, resizeVideo, useMorphology, morphSizeVal, showComparison, showTracking)
+            setting = SecurityCameraProcessorSettings(KVal, alphaVal, thresholdVal, heightVal, widthVal, resizeVideo, useMorphology, morphSizeVal, showComparison, showTracking, False, 0)
             
         # Create the name
         setting.name = f"Category-{category}\\{resolutionString}\\K-{KVal}\\A-{alphaVal}\\T-{thresholdVal}\\M-{morphSizeVal}"
@@ -82,6 +82,7 @@ def ExtractSettings(df: pd.DataFrame) -> list[tuple]:
     return SettingsAndVideos
 
 bestSettingsFile = ["Best-OpenCV-Settings.csv", "Best-Otsu-Settings.csv", "TipTop-Summary-OpenCV.csv",  "TipTop-Summary-Otsu.csv"]
+refreshIndex = [0, 10, 20, 30]
 
 try:
     index = int(sys.argv[1])
@@ -98,13 +99,20 @@ videoSettings = ExtractSettings(df)
 
 # Loop through each extracted setting and run it on its matched video
 for setting, video, res in videoSettings:
-    print(f"Running : {setting.name} on {video}")
-    
-    # Create the path dynamically using the matched resolution and video
-    videoPath = os.path.join("Videos", res, video)
-    
-    # Create a Video Processor and run it
-    processor = SecurityCameraProcessor(videoPath, setting, os.path.join(bestSettingsFile[index].split(".")[0], setting.name) + f"\\{video.split('.')[0]}")
+    for refIndex in refreshIndex: 
+        print(f"Running : {setting.name} on {video}")
+        
+        clonedSettings = setting.clone()
+        
+        if refIndex > 0:
+            clonedSettings.useRefresh = True
+            clonedSettings.refreshIndex = refIndex
+        
+        # Create the path dynamically using the matched resolution and video
+        videoPath = os.path.join("Videos", res, video)
+        
+        # Create a Video Processor and run it
+        processor = SecurityCameraProcessor(videoPath, clonedSettings, os.path.join(bestSettingsFile[index].split(".")[0], f"Ref{refIndex}", clonedSettings.name) + f"\\{video.split('.')[0]}")
 
-    processor.run()
-    processor.saveData()
+        processor.run()
+        processor.saveData()
