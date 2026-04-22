@@ -1,6 +1,8 @@
 import numpy as np
 from VideoProcessorSettings import VideoProcessorSettings
 from PixelModel import PixelModel
+from OpenCVModel import OpenCVModel
+from OtsuModel import OtsuModel
 
 class BackgroundSubtractor:
     
@@ -8,20 +10,32 @@ class BackgroundSubtractor:
     height: int
     
     grid: list[list[PixelModel]]
+    model: OpenCVModel
+    useOpenCV: bool
+    useOtsu: bool
     
     def __init__(self, settings : VideoProcessorSettings):
-        
         self.width = settings.width
         self.height = settings.height
+        self.useOpenCV = getattr(settings, 'useOpenCV', False)
+        self.useOtsu = getattr(settings, 'useOtsu', False)
         
-        self.grid = []
-        for y in range(settings.height):
-            row = []
-            for x in range(settings.width):
-                row.append(PixelModel(settings.K, settings.alpha, settings.threshold))
-            self.grid.append(row)
+        if self.useOpenCV:
+            self.model = OpenCVModel(settings)
+        elif self.useOtsu:
+            self.model = OtsuModel(settings)
+        else:
+            self.grid = []
+            for y in range(settings.height):
+                row = []
+                for x in range(settings.width):
+                    row.append(PixelModel(settings.K, settings.alpha, settings.threshold))
+                self.grid.append(row)
         
     def apply(self, frame):
+        
+        if self.useOpenCV or self.useOtsu:
+            return self.model.apply(frame)
         
         mask = np.zeros((self.height, self.width), dtype=np.uint8)
         

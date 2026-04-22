@@ -1,4 +1,5 @@
-from VideoProcessor import VideoProcessor
+import os
+from VideoProcessorOpenCV import VideoProcessorOpenCV
 from VideoProcessorSettings import VideoProcessorSettings
 
 # Define all the Settings
@@ -12,7 +13,7 @@ horizontalVideo = True
 useMorphology = True
 morphSize = 3
 showComparison = True
-showTracking = True
+showTracking = False
 
 # Create the Settings Object
 if horizontalVideo:
@@ -21,6 +22,8 @@ else:
     settings = VideoProcessorSettings(K, alpha, threshold, height, width, resizeVideo, useMorphology, morphSize, showComparison, showTracking)
 
 # Create a Video Processor and run it
-processor = VideoProcessor("Videos/Traffic.mp4", settings, "TrafficOutput")
+videoPath = os.path.join("Videos", "Traffic1.mp4")
+processor = VideoProcessorOpenCV(videoPath, settings, "TrafficOutput")
+
 processor.run()
 processor.saveData()

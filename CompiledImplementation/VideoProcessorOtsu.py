@@ -4,11 +4,11 @@ import cv2
 import time
 import numpy as np
 import pandas as pd
-from .BackgroundSubtractor import BackgroundSubtractor
+from .OtsuModel import OtsuModel
 from .VideoProcessorSettings import VideoProcessorSettings
 from .Tracking import Tracker
 
-class VideoProcessor:
+class VideoProcessorOtsu:
 
     folderName:str
     """Custom Name for the Folder to store the info into"""
@@ -19,8 +19,8 @@ class VideoProcessor:
     capture: cv2.VideoCapture
     """CV2 Video Stream"""
     
-    subtractor : BackgroundSubtractor
-    """Compiled Gaussian Video Subtractor"""
+    subtractor : OtsuModel
+    """Compiled Otsu Subtractor"""
     
     width:int
     """Width of the Video to Process"""
@@ -59,7 +59,9 @@ class VideoProcessor:
         self.settings = settings
         self.width = int(settings.width)
         self.height = int(settings.height)
-        self.subtractor = BackgroundSubtractor(settings.width, settings.height, settings.K, settings.alpha, settings.threshold, settings.useMorphology, settings.morphologySize)
+        
+        # Initialize the Otsu Model
+        self.subtractor = OtsuModel(settings)
         
         # Initialize Benchmarking info
         self.timingData = pd.DataFrame(columns=["Frame Index", "FPS", "Gaussian Time (s)", "Tracking Time (s)", "Full Processing Time (s)"])
@@ -100,7 +102,7 @@ class VideoProcessor:
                 
             startTimeProcessing = time.perf_counter()
             
-            # Apply the Background Gaussian Subtractor 
+            # Apply the Background Subtractor 
             mask = self.subtractor.apply(frame)
             
             deltaT = time.perf_counter() - startTimeProcessing
@@ -177,10 +179,6 @@ class VideoProcessor:
     def extractFrames(self, numFrames: int, outputDir: str):
         """
         Extract a specified number of frames from the video and save them as images.
-        
-        Args:
-            numFrames: Number of frames to extract
-            outputDir: Directory path to save the extracted frames
         """
         # Create output directory if it doesn't exist
         if not os.path.exists(outputDir):
@@ -225,10 +223,6 @@ class VideoProcessor:
     def extractRawFrames(self, numFrames: int, outputDir: str):
         """
         Extract raw video frames (without processing) at evenly distributed intervals.
-        
-        Args:
-            numFrames: Number of frames to extract
-            outputDir: Directory path to save the extracted frames
         """
         # Create output directory if it doesn't exist
         if not os.path.exists(outputDir):
@@ -262,4 +256,3 @@ class VideoProcessor:
         # Reset video to beginning for other operations
         self.capture.set(cv2.CAP_PROP_POS_FRAMES, 0)
         print(f"Extracted {extracted} raw frames to {outputDir}")
-            
