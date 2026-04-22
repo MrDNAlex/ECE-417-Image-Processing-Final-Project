@@ -5,7 +5,7 @@ import time
 import numpy as np
 import pandas as pd
 from .BackgroundSubtractor import BackgroundSubtractor
-from .VideoProcessorSettings import VideoProcessorSettings
+from .SecurityCameraProcessorSettings import SecurityCameraProcessorSettings
 from .Tracking import Tracker
 
 class SecurityCameraProcessor:
@@ -31,7 +31,7 @@ class SecurityCameraProcessor:
     showComparisonWindow: bool
     """Boolean Toggle for showing the OpenCV Window to view the comparison"""
     
-    settings:VideoProcessorSettings
+    settings:SecurityCameraProcessorSettings
     """Settings for the Video Processor"""
     
     timingData: pd.DataFrame
@@ -49,7 +49,7 @@ class SecurityCameraProcessor:
     compressedVideo: cv2.VideoWriter
     """Video Writer for the Compressed Security Camera Footage"""
     
-    def __init__(self, videoPath: str, settings : VideoProcessorSettings, folderName: str):
+    def __init__(self, videoPath: str, settings : SecurityCameraProcessorSettings, folderName: str):
         
         self.folderName = folderName
         self.fileName = os.path.basename(videoPath).split(".")[0]
@@ -103,7 +103,7 @@ class SecurityCameraProcessor:
                 print("Video finished.")
                 break
             
-            if frameIndex == 0:
+            if frameIndex == 0 or (self.settings.useRefresh and frameIndex % self.settings.refreshIndex == 0):
                 lastFrame = frame
             
             # Resize the Video if needed
@@ -115,8 +115,7 @@ class SecurityCameraProcessor:
             # Apply the Background Gaussian Subtractor 
             mask = self.subtractor.apply(frame)
             
-            #mask = self.subtractor.morph(mask, 0)
-            
+            # Apply Morphology
             kernel = np.ones((self.settings.morphologySize, self.settings.morphologySize), np.uint8)
             mask = cv2.dilate(mask, kernel, iterations=2)
             
