@@ -9,7 +9,7 @@ desiredColumns = ["Resolution", "Traffic", "K", "A", "T", "M", "Frames Compared"
 for video in videoNames:
     videoScores = []
     for frames in framesCompared:
-        scorePath = os.path.join("Data-Processing", "Processed", f"VideoScores-{video}-Comp{frames}.csv")
+        scorePath = os.path.join("Data-Processing", "Processed", "Scores", f"VideoScores-{video}-Comp{frames}.csv")
         
         # Make sure the file exists
         if (not os.path.exists(scorePath)):

@@ -41,12 +41,12 @@ for video in videoNames:
         subset = df[df['Frames Compared'] == frames].reset_index(drop=True)
         
         # Left Column (Col 0): OpenCV Data
-        axs[0, 0].plot(subset.index, subset['SSIM OpenCV AVG'], color=colorsCV[i], alpha=0.8, label=f"{frames} Frames")
+        axs[0, 0].plot(subset.index, subset['SSIM OpenCV AVG'], color=colorsCV[i], alpha=0.8, label=f"{frames}")
         axs[1, 0].plot(subset.index, subset['SSIM OpenCV Var'], color=colorsCV[i], alpha=0.8)
         axs[2, 0].plot(subset.index, subset['SSIM OpenCV Med'], color=colorsCV[i], alpha=0.8)
         
         # Right Column (Col 1): Otsu Data
-        axs[0, 1].plot(subset.index, subset['SSIM Otsu AVG'], color=colorsOtsu[i], alpha=0.8, label=f"{frames} Frames")
+        axs[0, 1].plot(subset.index, subset['SSIM Otsu AVG'], color=colorsOtsu[i], alpha=0.8, label=f"{frames}")
         axs[1, 1].plot(subset.index, subset['SSIM Otsu Var'], color=colorsOtsu[i], alpha=0.8)
         axs[2, 1].plot(subset.index, subset['SSIM Otsu Med'], color=colorsOtsu[i], alpha=0.8)
         
