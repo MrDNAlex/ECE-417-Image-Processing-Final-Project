@@ -1,0 +1,14 @@
+Category,Traffic Video,Resolution,M,K,A,T,Best Score
+1 - Best per Video,Traffic1,480p,M5,K3,A0.01_,T0.9,0.946
+1 - Best per Video,Traffic2,480p,M5,K4,A0.01_,T0.9,0.9244
+1 - Best per Video,Traffic3,120p,M5,K2,A0.1_,T0.9,0.9696
+1 - Best per Video,Traffic4,120p,M5,K3,A0.1_,T0.7,0.9402
+1 - Best per Video,Traffic5,120p,M5,K4,A0.1_,T0.9,0.9904
+2 - Best per Resolution,Traffic5,120p,M5,K4,A0.1_,T0.9,0.9904
+2 - Best per Resolution,Traffic5,240p,M5,K4,A0.1_,T0.9,0.9789
+2 - Best per Resolution,Traffic5,360p,M5,K4,A0.1_,T0.9,0.9727
+2 - Best per Resolution,Traffic5,480p,M5,K4,A0.1_,T0.9,0.9685
+3 - Best per M size,Traffic5,120p,M3,K4,A0.1_,T0.9,0.9535
+3 - Best per M size,Traffic5,120p,M4,K4,A0.1_,T0.9,0.9792
+3 - Best per M size,Traffic5,120p,M5,K4,A0.1_,T0.9,0.9904
+4 - Absolute Best Overall,Traffic5,120p,M5,K4,A0.1_,T0.9,0.9904
