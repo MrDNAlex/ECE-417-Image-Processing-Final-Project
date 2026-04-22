@@ -6,7 +6,7 @@ def ProcessCompressionSizes():
     results = []
     
     # Create a recursive search pattern matching the new folder structure
-    searchPath = os.path.join("Data-Processing", "Raw-Data", "Compression", "**", "**", "*p", "K-*", "A-*", "T-*", "M-*", "Traffic*", "*-Compressed.mp4")
+    searchPath = os.path.join("Data-Processing", "Raw-Data", "Compression", "**", "*p", "K-*", "A-*", "T-*", "M-*", "Traffic*", "*-Compressed.mp4")
     
     print(f"Scanning for files matching: {searchPath}")
     files = glob.glob(searchPath, recursive=True)
