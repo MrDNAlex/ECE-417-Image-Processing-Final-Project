@@ -41,7 +41,10 @@ class SecurityCameraProcessorSettings:
     refreshIndex:int
     """Number of frames to wait before doing a full refresh"""
     
-    def __init__(self, K, alpha, threshold, width, height, resizeVideo, useMorphology, morphologySize, showComparison, showTracking, useRefresh, refreshIndex, name = "Settings"):
+    useObjectDetection:bool
+    """Boolean toggle for using Object Detection to refresh frames"""
+    
+    def __init__(self, K, alpha, threshold, width, height, resizeVideo, useMorphology, morphologySize, showComparison, showTracking, useRefresh, refreshIndex, useObjectDetection, name = "Settings"):
         self.K = K
         self.alpha = alpha
         self.threshold = threshold
@@ -54,6 +57,7 @@ class SecurityCameraProcessorSettings:
         self.showObjectTracking = showTracking
         self.useRefresh = useRefresh
         self.refreshIndex = refreshIndex
+        self.useObjectDetection = useObjectDetection
         self.name = name
         
     def getCSV(self) -> pd.DataFrame:
@@ -72,9 +76,10 @@ class SecurityCameraProcessorSettings:
         dataFrame.loc[len(dataFrame)] = ["Show Tracking", self.showObjectTracking]
         dataFrame.loc[len(dataFrame)] = ["Use Refresh", self.useRefresh]
         dataFrame.loc[len(dataFrame)] = ["Refresh Index", self.refreshIndex]
+        dataFrame.loc[len(dataFrame)] = ["Use Object Detection", self.useObjectDetection]
         
         
         return dataFrame
     
     def clone(self):
-        return SecurityCameraProcessorSettings(self.K, self.alpha, self.threshold, self.width, self.height, self.resizeVideo, self.useMorphology, self.morphologySize, self.showComparisonWindow, self.showObjectTracking, self.useRefresh, self.refreshIndex, self.name)
+        return SecurityCameraProcessorSettings(self.K, self.alpha, self.threshold, self.width, self.height, self.resizeVideo, self.useMorphology, self.morphologySize, self.showComparisonWindow, self.showObjectTracking, self.useRefresh, self.refreshIndex, self.useObjectDetection, self.name)

@@ -134,8 +134,28 @@ class SecurityCameraProcessor:
             maskBGR = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
             
             # Update the last Frame based on the mask (The Novel Component)
-            activePixels = maskBGR == 255
-            lastFrame[activePixels] = frame[activePixels]
+            if self.settings.useObjectDetection:
+                # Create a completely blank mask the same size as our image
+                boundingBoxMask = np.zeros_like(maskBGR)
+                
+                # Draw solid white rectangles on the blank mask wherever an object is
+                for instance in currentInstances:
+                    x = int(instance.X)
+                    y = int(instance.Y)
+                    w = int(instance.width)
+                    h = int(instance.height)
+                    
+                    # -1 thickness fills the rectangle completely solid
+                    cv2.rectangle(boundingBoxMask, (x, y), (x + w, y + h), (255, 255, 255), -1)
+                
+                # Intersect the two masks (Keeps the pixel shape, but ONLY inside the boxes)
+                filteredMask = cv2.bitwise_and(maskBGR, boundingBoxMask)
+                
+                activePixels = filteredMask == 255
+                lastFrame[activePixels] = frame[activePixels]
+            else:
+                activePixels = maskBGR == 255
+                lastFrame[activePixels] = frame[activePixels]
             
             topRow = np.hstack((frame, maskBGR))
             bottomRow = np.zeros((self.height, self.width * 2, 3), dtype=np.uint8)

@@ -69,9 +69,9 @@ def ExtractSettings(df: pd.DataFrame) -> list[tuple]:
         
         # Create the Settings
         if horizontalVideo:
-            setting = SecurityCameraProcessorSettings(KVal, alphaVal, thresholdVal, widthVal, heightVal, resizeVideo, useMorphology, morphSizeVal, showComparison, showTracking, False, 0)
+            setting = SecurityCameraProcessorSettings(KVal, alphaVal, thresholdVal, widthVal, heightVal, resizeVideo, useMorphology, morphSizeVal, showComparison, showTracking, False, 0, False)
         else:
-            setting = SecurityCameraProcessorSettings(KVal, alphaVal, thresholdVal, heightVal, widthVal, resizeVideo, useMorphology, morphSizeVal, showComparison, showTracking, False, 0)
+            setting = SecurityCameraProcessorSettings(KVal, alphaVal, thresholdVal, heightVal, widthVal, resizeVideo, useMorphology, morphSizeVal, showComparison, showTracking, False, 0, False)
             
         # Create the name
         setting.name = f"Category-{category}\\{resolutionString}\\K-{KVal}\\A-{alphaVal}\\T-{thresholdVal}\\M-{morphSizeVal}"
@@ -100,19 +100,21 @@ videoSettings = ExtractSettings(df)
 # Loop through each extracted setting and run it on its matched video
 for setting, video, res in videoSettings:
     for refIndex in refreshIndex: 
-        print(f"Running : {setting.name} on {video}")
-        
-        clonedSettings = setting.clone()
-        
-        if refIndex > 0:
-            clonedSettings.useRefresh = True
-            clonedSettings.refreshIndex = refIndex
-        
-        # Create the path dynamically using the matched resolution and video
-        videoPath = os.path.join("Videos", res, video)
-        
-        # Create a Video Processor and run it
-        processor = SecurityCameraProcessor(videoPath, clonedSettings, os.path.join(bestSettingsFile[index].split(".")[0], f"Ref{refIndex}", clonedSettings.name) + f"\\{video.split('.')[0]}")
+        for objDetect in [True, False]:
+            print(f"Running : {setting.name} on {video}")
+            
+            clonedSettings = setting.clone()
+            clonedSettings.useObjectDetection = objDetect
+            
+            if refIndex > 0:
+                clonedSettings.useRefresh = True
+                clonedSettings.refreshIndex = refIndex
+            
+            # Create the path dynamically using the matched resolution and video
+            videoPath = os.path.join("Videos", res, video)
+            
+            # Create a Video Processor and run it
+            processor = SecurityCameraProcessor(videoPath, clonedSettings, os.path.join(bestSettingsFile[index].split(".")[0], f"ObjDetect{objDetect}", f"Ref{refIndex}", clonedSettings.name) + f"\\{video.split('.')[0]}")
 
-        processor.run()
-        processor.saveData()
+            processor.run()
+            processor.saveData()
