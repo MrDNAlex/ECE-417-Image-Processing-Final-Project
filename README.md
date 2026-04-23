@@ -36,3 +36,5 @@ python CompiledImplementation/setup.py build_ext --build-lib CompiledImplementat
 
 # Authors 
 Alexandre Dufresne-Nappert : a3dufres@uwaterloo.ca
+Gigi Sae-Zheng : gsaezhen@uwaterloo.ca
+San Basnet : s2basnet@uwaterloo.ca
